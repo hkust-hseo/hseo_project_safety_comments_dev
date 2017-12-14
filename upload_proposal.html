@@ -1,0 +1,27 @@
+<html>
+  <head>
+  <meta charset="utf-8">
+  <link rel = "stylesheet" type = "text/css" href = "css/universal.css">
+  <link rel = "stylesheet" type = "text/css" href = "css/upload_proposal.css">
+  <title>Upload Proposal</title>
+  </head>
+
+  <body>
+    <header>
+      Upload Proposal
+      <img src = "img/hkust_logo_white.png"/>
+    </header>
+
+    <form action = "upload_proposal.php" id="details_form" method = "post" enctype = "multipart/form-data">
+    	Reference Number:<br/>
+    	<input type = "text" name = "ref_no" required>
+    	<br/>
+      Upload Proposal:<br/>
+      <input type = "file" name = "proj_file" id = "upload_file" accept = "application/pdf">
+      <br/><br/>
+
+      <input type = "submit" value = "Upload File" name = "upload_button" id="submit_button">
+    </form>
+
+  </body>
+</html>

@@ -75,7 +75,7 @@
     $fetch_memo_file_query = "SELECT file_link, memo_no FROM memo_details WHERE memo_no = '$memo_no';";
     $fetch_proj_files_query = "SELECT review_link, ref_no FROM proj_files WHERE ref_no IN (SELECT ref_no FROM proj_details WHERE memo = '$memo_no');";
 
-    $mail->Subject = "Test subject";
+    $mail->Subject = "Review Completed: ". $memo_no;
 
     $files_count = 0;
     $files = array();
@@ -100,11 +100,30 @@
       }
     }
 
-    $mail->Body = "Email content\n";
+    // HTML email body
+    $mail->Body = "Dear Sir/Madam,<br/><br/>";  // Email content
+    $mail->Body .= "The project safety review for the following ";
+    if($ref_count <= 1) {
+      $mail->Body .= "project is ";
+    }
+    else {
+      $mail->Body .= "projects are ";
+    }
+    $mail->Body .= "completed.<br/>";
+    for($i = 0; $i < $ref_count; $i++) {
+      $mail->Body .= $ref_array[$i]."<br/>";
+    }
 
-    // TODO: Add attachments
+    $mail->Body .= "<br/>Attached please find the corresponding review forms.<br/>";
+    $mail->Body .= "Please forward them to the parties concerned."
+
+    $mail->Body .= body_ending;
+
+    // Plain text email body
+    // Does this work?
+    $mail->AltBody = str_replace("<br/>", "\n", $mail->Body);
+
     for($i = 0; $i < $files_count; $i++) {
-      // TODO: file name for each of the files
       $mail->addAttachment($files[$i]['path'], $files[$i]['name']);
     }
 

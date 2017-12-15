@@ -1,6 +1,8 @@
 <?php
   require "ref/PHPMailer-master/PHPMailerAutoload.php";
 
+  $receiver_email = "lauy1997@gmail.com";
+
   define("from_address", "srapproval@ust.hk");
   define("to_address", $receiver_email);
   define("body_ending", "Yours,<br/>System Admin");
@@ -18,6 +20,8 @@
   $mail->addAddress(to_address);
 
   $mail->isHTML(true);
+
+  $mode = $_GET['mode'];
 
   // Send to HSEO Director about pending memos
   if($mode == "pending_memo") {
@@ -68,6 +72,8 @@
   }
 
   if($mode == "send_memo") {
+    $memo_no = $_GET['memo_no'];
+
     require("db_connect.php");
 
     // Get department to send email to
@@ -83,7 +89,6 @@
     // Put in corresponding receiver details
     //  if ($dept == "CBE") { }
     // TODO: sub out own test email
-    $receiver_email = "lauy1997@gmail.com";
 
     // SQL to fetch all related file links
     // memo, individual comment form
@@ -118,20 +123,19 @@
     // HTML email body
     $mail->Body = "Dear Sir/Madam,<br/><br/>";  // Email content
     $mail->Body .= "The project safety review for the following ";
-    if($ref_count <= 1) {
+    if($files_count-1 <= 1) {
       $mail->Body .= "project is ";
     }
     else {
       $mail->Body .= "projects are ";
     }
     $mail->Body .= "completed.<br/>";
-    for($i = 0; $i < $ref_count; $i++) {
-      $mail->Body .= $ref_array[$i]."<br/>";
+    for($i = 1; $i < $files_count; $i++) {
+      $mail->Body .= $files[$i]['name']."<br/>";
     }
 
     $mail->Body .= "<br/>Attached please find the corresponding review forms.<br/>";
-    $mail->Body .= "Please forward them to the parties concerned."
-
+    $mail->Body .= "Please forward them to the parties concerned.<br/><br/>";
     $mail->Body .= body_ending;
 
     // Plain text email body
@@ -148,6 +152,4 @@
     echo "Email not send<br/>";
     echo "Mailer Error: " . $mail->ErrorInfo;
   }
-
-  include("db_disconnect.php");
 ?>

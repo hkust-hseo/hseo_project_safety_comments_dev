@@ -70,6 +70,21 @@
   if($mode == "send_memo") {
     require("db_connect.php");
 
+    // Get department to send email to
+    $identify_dept_query = "SELECT dept FROM proj_details WHERE memo = '$memo_no' LIMIT 1;";
+    if (mysqli_real_query($db, $identify_dept_query)) {
+      $result = mysqli_store_result($db);
+      $row = mysqli_fetch_row($result);
+      $dept = $row[0];
+    } else {
+      echo "Error accessing database. Error code: " . $mysqli->error;
+    }
+
+    // Put in corresponding receiver details
+    //  if ($dept == "CBE") { }
+    // TODO: sub out own test email
+    $receiver_email = "lauy1997@gmail.com";
+
     // SQL to fetch all related file links
     // memo, individual comment form
     $fetch_memo_file_query = "SELECT file_link, memo_no FROM memo_details WHERE memo_no = '$memo_no';";
@@ -126,7 +141,6 @@
     for($i = 0; $i < $files_count; $i++) {
       $mail->addAttachment($files[$i]['path'], $files[$i]['name']);
     }
-
   }
 
   // Send email

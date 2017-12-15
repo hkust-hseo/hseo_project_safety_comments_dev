@@ -26,6 +26,16 @@
   <script>
     function sendMemo(memo_no){
       // TODO: send email (long-term goal)
+      var send_memo;
+
+      send_memo = $.ajax({
+        url: "send_memo.php",
+        type: "post",
+        data: {
+          mode: "send_memo",
+          memo_no: memo_no
+        }
+      });
 
       var confirm_sent;    // to be ajax object
 

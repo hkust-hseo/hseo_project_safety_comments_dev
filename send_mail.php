@@ -1,30 +1,34 @@
 <?php
   require "ref/PHPMailer-master/PHPMailerAutoload.php";
 
-  $receiver_email = "lauy1997@gmail.com";
+  if(!isset($mode)){
+    $mode = $_GET['mode'];
+  }
 
-  define("from_address", "srapproval@ust.hk");
-  define("to_address", $receiver_email);
-  define("body_ending", "Yours,<br/>System Admin");
+  function setMailHeader($mail, $receiver_email) {
+    define("from_address", "srapproval@ust.hk");
+    define("to_address", $receiver_email);
+    define("body_ending", "Yours,<br/>System Admin");
 
-  $mail = new PHPMailer;
+    $mail->IsSMTP();
+    $mail->Host = "smtp.ust.hk";
+    $mail->Port = 587;
+    $mail->SMTPAuth = true;
+    $mail->Username = "srapproval@ust.hk";
+    $mail->Password = "srhseosr";
 
-  $mail->IsSMTP();
-  $mail->Host = "smtp.ust.hk";
-  $mail->Port = 587;
-  $mail->SMTPAuth = true;
-  $mail->Username = "srapproval@ust.hk";
-  $mail->Password = "srhseosr";
+    $mail->setFrom(from_address, "System Admin");
+    $mail->addAddress(to_address);
 
-  $mail->setFrom(from_address, "System Admin");
-  $mail->addAddress(to_address);
-
-  $mail->isHTML(true);
-
-  $mode = $_GET['mode'];
+    $mail->isHTML(true);
+  }
 
   // Send to HSEO Director about pending memos
   if($mode == "pending_memo") {
+    // Create mail container and header
+    $mail = new PHPMailer;
+    setMailHeader($mail, director_email);
+
     // variables
     $memo_url = "143.89.195.131/hseo_project_safety_comments/pending_memo.php";    // URL of pending memo page
 
@@ -72,6 +76,7 @@
   }
 
   if($mode == "send_memo") {
+    $mail = new PHPMailer;
     $memo_no = $_GET['memo_no'];
 
     require("db_connect.php");
@@ -87,8 +92,10 @@
     }
 
     // Put in corresponding receiver details
-    //  if ($dept == "CBE") { }
+    //  if ($dept == "CBE") {}
     // TODO: sub out own test email
+    setMailHeader($mail, "lauy1997@gmail.com");
+
 
     // SQL to fetch all related file links
     // memo, individual comment form

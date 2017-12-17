@@ -1,15 +1,21 @@
 <?php
   require "ref/PHPMailer-master/PHPMailerAutoload.php";
 
+  // email content definitions
+  define("from_address", "srapproval@ust.hk");
+  define("body_ending", "Yours,<br/>System Admin");
+
+  // contact definitions
+  define("director_email", "ylauad@connect.ust.hk");
+  define("cbe_email", "ylauad@connect.ust.hk");
+  define("bien_email", "ylauad@connect.ust.hk");
+
+  // TODO: remove this by finding a way to GET from print_memo.php
   if(!isset($mode)){
     $mode = $_GET['mode'];
   }
 
-  function setMailHeader($mail, $receiver_email) {
-    define("from_address", "srapproval@ust.hk");
-    define("to_address", $receiver_email);
-    define("body_ending", "Yours,<br/>System Admin");
-
+  function initMail($mail, $receiver_email) {
     $mail->IsSMTP();
     $mail->Host = "smtp.ust.hk";
     $mail->Port = 587;
@@ -18,7 +24,7 @@
     $mail->Password = "srhseosr";
 
     $mail->setFrom(from_address, "System Admin");
-    $mail->addAddress(to_address);
+    $mail->addAddress($receiver_email);
 
     $mail->isHTML(true);
   }
@@ -27,7 +33,7 @@
   if($mode == "pending_memo") {
     // Create mail container and header
     $mail = new PHPMailer;
-    setMailHeader($mail, director_email);
+    initMail($mail, director_email);
 
     // variables
     $memo_url = "143.89.195.131/hseo_project_safety_comments/pending_memo.php";    // URL of pending memo page
@@ -94,7 +100,7 @@
     // Put in corresponding receiver details
     //  if ($dept == "CBE") {}
     // TODO: sub out own test email
-    setMailHeader($mail, "lauy1997@gmail.com");
+    initMail($mail, "lauy1997@gmail.com");
 
 
     // SQL to fetch all related file links

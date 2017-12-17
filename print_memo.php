@@ -4,7 +4,6 @@
 
   // Constants
   define("director", "Joseph Kwan");    // director of HSEO
-  define("director_email", "lauy1997@gmail.com");  // Email of director of HSEO (for sending notification email)
   define("cbe_via", "Mrs. Pauline Leung");
   define("bien_via", "Miss Inez Tsui");
 
